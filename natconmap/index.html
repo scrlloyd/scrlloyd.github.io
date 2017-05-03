@@ -11,17 +11,11 @@
         <link rel="stylesheet" href="css/label.css" />
         <link rel="stylesheet" href="css/MarkerCluster.css" />
         <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
-        <link rel="stylesheet" href="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.css" />
-        <link rel="stylesheet" href="css/leaflet.draw.css" />
-        <link rel="stylesheet" href="css/leaflet.measurecontrol.css" />
         <script src="js/leaflet.js"></script>
         <script src="js/OSMBuildings-Leaflet.js"></script>
         <script src="js/leaflet-hash.js"></script>
         <script src="js/label.js"></script>
         <script src="js/Autolinker.min.js"></script>
-        <script src="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.js"></script>
-        <script src="js/leaflet.draw.js"></script>
-        <script src="js/leaflet.measurecontrol.js"></script>
         <script src="js/leaflet.markercluster.js"></script>
         <style>
         html, body, #map {
@@ -38,18 +32,12 @@
         </div>
         <script src="data/json_export0.js"></script>
         <script>
-        var highlightLayer;
-        function highlightFeature(e) {
-            highlightLayer = e.target;
-            highlightLayer.openPopup();
-        }
         L.ImageOverlay.include({
             getBounds: function () {
                 return this._bounds;
             }
         });
         var map = L.map('map', {
-            measureControl:true,
             zoomControl:true, maxZoom:28, minZoom:1
         }).fitBounds([[40.4807006885,-73.8849440717],[41.2149716245,-72.5226899104]]);
         var hash = new L.Hash(map);
@@ -69,7 +57,6 @@
                 map.removeLayer(initialOrder[index]);
                 map.addLayer(initialOrder[index]);
             }
-            map.setMaxBounds(map.getBounds());
         }
         function restackLayers() {
             for (index = 0; index < layerOrder.length; index++) {
@@ -78,18 +65,6 @@
         }
         layerControl = L.control.layers({},{},{collapsed:false});
         function pop_export0(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    if (typeof layer.closePopup == 'function') {
-                        layer.closePopup();
-                    } else {
-                        layer.eachLayer(function(feature){
-                            feature.closePopup()
-                        });
-                    }
-                },
-                mouseover: highlightFeature,
-            });
             var popupContent = '<table><tr><th scope="row">Assessed</th><td>' + (feature.properties['Assessed'] !== null ? Autolinker.link(String(feature.properties['Assessed'])) : '') + '</td></tr><tr><th scope="row">surveyID</th><td>' + (feature.properties['surveyID'] !== null ? Autolinker.link(String(feature.properties['surveyID'])) : '') + '</td></tr><tr><th scope="row">CrosCode</th><td>' + (feature.properties['CrosCode'] !== null ? Autolinker.link(String(feature.properties['CrosCode'])) : '') + '</td></tr><tr><th scope="row">CrosType</th><td>' + (feature.properties['CrosType'] !== null ? Autolinker.link(String(feature.properties['CrosType'])) : '') + '</td></tr><tr><th scope="row">Aop</th><td>' + (feature.properties['Aop'] !== null ? Autolinker.link(String(feature.properties['Aop'])) : '') + '</td></tr><tr><th scope="row">AqScNaac</th><td>' + (feature.properties['AqScNaac'] !== null ? Autolinker.link(String(feature.properties['AqScNaac'])) : '') + '</td></tr><tr><th scope="row">Eval</th><td>' + (feature.properties['Eval'] !== null ? Autolinker.link(String(feature.properties['Eval'])) : '') + '</td></tr><tr><th scope="row">GPSx</th><td>' + (feature.properties['GPSx'] !== null ? Autolinker.link(String(feature.properties['GPSx'])) : '') + '</td></tr><tr><th scope="row">GPSy</th><td>' + (feature.properties['GPSy'] !== null ? Autolinker.link(String(feature.properties['GPSy'])) : '') + '</td></tr><tr><th scope="row">LastUpdat</th><td>' + (feature.properties['LastUpdat'] !== null ? Autolinker.link(String(feature.properties['LastUpdat'])) : '') + '</td></tr><tr><th scope="row">Road</th><td>' + (feature.properties['Road'] !== null ? Autolinker.link(String(feature.properties['Road'])) : '') + '</td></tr><tr><th scope="row">crState</th><td>' + (feature.properties['crState'] !== null ? Autolinker.link(String(feature.properties['crState'])) : '') + '</td></tr><tr><th scope="row">StrmName</th><td>' + (feature.properties['StrmName'] !== null ? Autolinker.link(String(feature.properties['StrmName'])) : '') + '</td></tr><tr><th scope="row">crTown</th><td>' + (feature.properties['crTown'] !== null ? Autolinker.link(String(feature.properties['crTown'])) : '') + '</td></tr><tr><th scope="row">Latitude</th><td>' + (feature.properties['Latitude'] !== null ? Autolinker.link(String(feature.properties['Latitude'])) : '') + '</td></tr><tr><th scope="row">Longitud</th><td>' + (feature.properties['Longitud'] !== null ? Autolinker.link(String(feature.properties['Longitud'])) : '') + '</td></tr><tr><th scope="row">gTown</th><td>' + (feature.properties['gTown'] !== null ? Autolinker.link(String(feature.properties['gTown'])) : '') + '</td></tr><tr><th scope="row">gWshed</th><td>' + (feature.properties['gWshed'] !== null ? Autolinker.link(String(feature.properties['gWshed'])) : '') + '</td></tr><tr><th scope="row">gState</th><td>' + (feature.properties['gState'] !== null ? Autolinker.link(String(feature.properties['gState'])) : '') + '</td></tr><tr><th scope="row">NoCross</th><td>' + (feature.properties['NoCross'] !== null ? Autolinker.link(String(feature.properties['NoCross'])) : '') + '</td></tr><tr><th scope="row">Approved</th><td>' + (feature.properties['Approved'] !== null ? Autolinker.link(String(feature.properties['Approved'])) : '') + '</td></tr></table>';
             layer.bindPopup(popupContent);
         }
@@ -188,15 +163,8 @@
         feature_group.addLayer(json_export0JSON);
         raster_group.addTo(map);
         feature_group.addTo(map);
-        var osmGeocoder = new L.Control.OSMGeocoder({
-            collapsed: false,
-            position: 'topright',
-            text: 'Search',
-        });
-        osmGeocoder.addTo(map);
         var baseMaps = {'OSM': basemap0};
         L.control.layers(baseMaps,{'export<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_.png" /> <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_Bridge.png" /> Bridge<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_BuriedStream.png" /> Buried Stream<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_Culvert.png" /> Culvert<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_Ford.png" /> Ford<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_Inaccessible.png" /> Inaccessible<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/export0_MultipleCulvert.png" /> Multiple Culvert<br />': json_export0JSON,},{collapsed:false}).addTo(map);
-        L.control.scale({options: {position: 'bottomleft', maxWidth: 100, metric: true, imperial: false, updateWhenIdle: false}}).addTo(map);
         stackLayers();
         map.on('overlayadd', restackLayers);
         </script>
